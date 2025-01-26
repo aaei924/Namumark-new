@@ -1,43 +1,73 @@
-# php-namumark
-php-namumark는 나무위키에서 사용되는 나무마크를 HTML 페이지로 변환하는 라이브러리입니다.
+## 소개
+PHP 나무마크 렌더러를 만듭니다.
 
-## 라이선스
-본 라이브러리는 GNU Affero GPL 3.0에 따라 자유롭게 사용하실 수 있습니다. 라이선스에 대한 자세한 사항은 첨부 문서를 참고하십시오.
+[php-namumark](http://github.com/koreapyj/php-namumark)를 수정했습니다.
 
-## 사용 방법
-사용 방법에는 두 가지가 있습니다.
-	
-### 일반 텍스트로 넘기는 경우
+## 사용법
+```php
+// $text 값에 RAW 텍스트를 지정합니다.
+require 'NamuMark.php';
 
-	// 라이브러리를 불러옵니다.
-	require_once("namumark.php");
-	
-	// MySQLWikiPage와는 달리 PlainWikiPage의 첫 번째 인수로 위키텍스트를 받습니다.
-	$wPage = new PlainWikiPage("위키텍스트");
-	
-	// NamuMark 생성자는 WikiPage를 인수로 받습니다.
-	$wEngine = new NamuMark($wPage);
-	
-	// 위키링크의 앞에 붙을 경로를 prefix에 넣습니다.
-	$wEngine->prefix = "/wiki";
-	
-	// toHtml을 호출하면 HTML 페이지가 생성됩니다.
-	echo $wEngine->toHtml();
+$nm = new NamuMark();
+$nm->noredirect = '1'; // 리다이렉트 문서일 경우 페이지를 이동할지의 여부
+$nm->title = '문서 제목';
 
-### MariaDB를 사용할 경우
-	// MySQL 서버에 접속합니다.
-	$mysqli = new mysqli("localhost", "kasugano", "someawesomepassword", "reallycooldbname");
-	
-	require_once("namumark.php");
-	
-	// MariaDB를 사용할 것이므로 MySQLWikiText를 생성합니다.
-	$wPage = new MySQLWikiPage("읽어올 문서이름", $mysqli);
-	$wEngine = new NamuMark($wPage);
-	$wEngine->prefix = "/wiki";
-	echo $wEngine->toHtml();
-	
-	// 수정된 날짜를 가져오려면 WikiPage의 lastchanged를 참조하세요.
-	echo "수정된 날짜 : " . $wPage->lastchanged;
-	
-## 그 외
-상당한 발코딩입니다. 항상 죄송스럽게 생각합니다.
+$nm->toHtml($text); // HTML 렌더링 결과
+
+$nm->toc; // 문서 목차
+$nm->category; // 분류 목록
+```
+
+## 참고사항
+### CSS
+동봉된 src/namumark.css를 불러오시면 됩니다.
+
+렌더링된 HTML이 'w' class를 가진 요소 안에 있어야 합니다. 
+```html
+<!--예시-->
+<div class="w">
+  <!--렌더링 결과-->
+</div>
+```
+
+### JS
+일부 문법의 원활한 적용을 위해서는 src/namumark.js가 적용되어야 합니다.
+
+대상 문법:
+- 수식
+- 문단 접기/펼치기
+- folding 문법
+
+### 토론
+토론에서도 나무마크를 사용할 수 있지만, 일부 문법은 사용이 불가합니다.
+```php
+$nm = new NamuMark();
+// ...
+$nm->inThread = true;
+// ...
+echo $nm->toHtml();
+```
+토론 상에서 사용 가능한 문법만을 처리하려는 경우 위 값을 지정하면 됩니다.
+
+다음 문법은 토론에서 사용할 수 없습니다.
+- 분류
+- 리다이렉트
+- 사진
+- 동영상
+- 일부 매크로
+- TeX 문법
+- HTML
+
+### 날짜 매크로
+현재 시각은 서버에 설치된 php의 기본 시간대를 기준으로 표시됩니다. 변경을 원하는 경우 php.ini에서 date.timezone 값을 수정해 주시기 바랍니다.
+
+사용 가능한 시간대 목록은 [여기](https://www.php.net/manual/en/timezones.php)를 참고해주세요. 본 라이브러리를 PressDo에서 사용하는 경우 PressDo 설정에서 시간대 지정이 가능합니다.
+
+## 주의사항
+AGPL 3.0 라이선스에 따라 사용 시 소스코드를 공개하여야 합니다. 또한 기여자는 코드에 대해 책임을 지거나 보증하지 않습니다.
+
+PHP 8 이상 환경에서만 작동합니다.
+
+## 오픈 소스 라이선스
+- php-namumark (koreapyj)
+- Ionicons (ionic-team)
