@@ -6,17 +6,29 @@
 <meta charset="UTF-8">
 <?php
 
-require 'NamuMark.php';
-$c = file_get_contents('samples/primary.txt');
-$wEngine = new NamuMark();
+require 'Namumark.php';
+require 'HTMLRenderer.php';
+$c = file_get_contents('samples/test1.namu');
+$wEngine = new Namumark();
 $wEngine->noredirect = '1';
 $wEngine->title = 'PressDoWiki:문법 도움말';
+$wtext = $wEngine->toHtml($c);
 
 ?>
-<div class="w">
-    <?=$wEngine->toHtml($c)?>
-    <div class="popper">
-        <div class="popper__arrow"></div>
-        <div class="popper__inner"></div>
+<body class="pressdo-dark-mode">
+    <div class="w">
+        <?=$wEngine->renderComments()?>
+        <div class="popper">
+            <div class="popper__arrow"></div>
+            <div class="popper__inner"></div>
+        </div>
     </div>
-</div>
+    <p> 상단주석 끝</p>
+    <div class="w">
+        <?=$wtext?>
+        <div class="popper">
+            <div class="popper__arrow"></div>
+            <div class="popper__inner"></div>
+        </div>
+    </div>
+</body>

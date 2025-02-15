@@ -6,15 +6,18 @@ PHP 나무마크 렌더러를 만듭니다.
 [php-namumark](http://github.com/koreapyj/php-namumark)를 수정했습니다.
 
 ## 사용법
+HTML 적용 예제는 [example.php](https://github.com/aaei924/Namumark-new/blob/master/example.php)를 참고하세요.
 ```php
 // $text 값에 RAW 텍스트를 지정합니다.
-require 'NamuMark.php';
+require 'Namumark.php';
 
-$nm = new NamuMark();
+$nm = new Namumark();
 $nm->noredirect = '1'; // 리다이렉트 문서일 경우 페이지를 이동할지의 여부
 $nm->title = '문서 제목';
+$nm->db = true; // Database 기능 사용 여부 (include, 하이퍼링크 등)
 
 $nm->toHtml($text); // HTML 렌더링 결과
+$nm->renderComments(); // 편집창 상단 주석
 
 $nm->toc; // 문서 목차
 $nm->category; // 분류 목록
@@ -68,7 +71,10 @@ echo $nm->toHtml();
 ## 주의사항
 AGPL 3.0 라이선스에 따라 사용 시 소스코드를 공개하여야 합니다. 또한 기여자는 코드에 대해 책임을 지거나 보증하지 않습니다.
 
-PHP 8 이상 환경에서만 작동합니다.
+PHP 8 이상의 환경에서만 작동합니다.
+
+## 알려진 이슈
+긴 텍스트에 문법을 적용한 경우 타임아웃으로 렌더러가 멈추는 문제가 발생하고 있습니다. (45만자 기준)
 
 ## 오픈 소스 라이선스
 - php-namumark (koreapyj)
